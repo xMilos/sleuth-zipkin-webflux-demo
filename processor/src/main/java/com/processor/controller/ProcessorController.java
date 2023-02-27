@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,6 +26,8 @@ public class ProcessorController {
     @GetMapping("processor")
     public Flux<Event> processEvents() {
         log.info("processing some strings");
+        log.info("traceId should be: {}", MDC.get("traceId"));
+        log.info("spanId should be: {}", MDC.get("spanId"));
         return webClientBuilder.baseUrl(EMITTER_ENDPOINT).build().get()
                 .retrieve()
                 .bodyToFlux(Event.class)
